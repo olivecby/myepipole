@@ -1,3 +1,6 @@
+var d = new Date();
+document.getElementById("date").innerHTML = d.toDateString();
+
 var url = "https://api.nasa.gov/planetary/apod?api_key=ojxI5NyZqcx34HQ28SzPmITxUGZhKj8uumqBm0zt";
 
 
