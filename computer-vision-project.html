@@ -12,6 +12,17 @@
   <source src="result.mp4" type="video/mp4">
     The video cannot be played. Plz blame your browser.
   </video>
+  
+  <p>
+    Here is a brief of this project:
+    We used feature tracking to locate 4 coreners of the computer screen. It is implemented by looping through all the pixels
+    in each frame and find the smallest SSD value for each marker image. It took around 1 hour to locate the trackers of all frames at first,
+    but we improved the algorithm by only searching the surrounding area of each tracker in the previous frame. In this way the running time is 
+    shortened to 2 minutes, which is 30 times faster. After that, for each frame we calculated the perspective transformation matrix
+    between the screen and the replacement image using SVD. Then in each frame we applied the matrices to map all the pixels from the content 
+    image to the screen, so that the screen replacement is invariant to perspective change from frame to frame.
+    Thanks for watching and special thanks to my partner @Hien for making this project possible!
+  </p>
  
   
 </body>
