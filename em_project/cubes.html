@@ -19,6 +19,8 @@
 
 		<script src="js/stats.min.js"></script>
 
+		<script src="js/tone.min.js"></script>
+
 		<script>
 
 			var container, stats;
@@ -26,6 +28,8 @@
 
 			var mouse = new THREE.Vector2(), INTERSECTED;
 			var radius = 100, theta = 0;
+
+			var notes = ["C4", "D4", "E4", "F4", "G4", "A4", "B4"];
 
 			init();
 			animate();
@@ -46,7 +50,7 @@
 				camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 10000 );
 
 				scene = new THREE.Scene();
-				scene.background = new THREE.Color( 0xf0f0f0 );
+				scene.background = new THREE.Color( 0xffffff );
 
 				var light = new THREE.DirectionalLight( 0xffffff, 1 );
 				light.position.set( 1, 1, 1 ).normalize();
@@ -110,7 +114,26 @@
 
 			}
 
-			//
+
+			function play(){
+					var synth = new Tone.Synth({
+						"oscillator" : {
+							"type" : "amtriangle",
+							"harmonicity" : 0.5,
+							"modulationType" : "sine"
+						},
+						"envelope" : {
+							"attackCurve" : 'exponential',
+							"attack" : 0.05,
+							"decay" : 0.2,
+							"sustain" : 0.2,
+							"release" : 1.5,
+						},
+						"portamento" : 0.05
+					}).toMaster();
+					var num = Math.floor(Math.random() * 7)
+					synth.triggerAttackRelease(notes[num], 1 );
+		}
 
 			function animate() {
 
@@ -147,7 +170,7 @@
 						INTERSECTED = intersects[ 0 ].object;
 						INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
 						INTERSECTED.material.emissive.setHex( 0xff0000 );
-
+						play();
 					}
 
 				} else {
@@ -161,6 +184,7 @@
 				renderer.render( scene, camera );
 
 			}
+
 
 		</script>
 
