@@ -1,5 +1,6 @@
-function play(){
-  var synth = new Tone.Synth().toMaster();
-  //play a middle 'C' for the duration of an 8th note
-  synth.triggerAttackRelease("C4", "8n");
-}
+var player = new Tone.Player({
+    "url" : "../samples/creepy_109.wav",
+    "autostart" : true,
+}).toMaster();
+
+player.start();

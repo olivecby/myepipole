@@ -9,9 +9,13 @@
 		</style>
 	</head>
 	<body>
-		<script src="js/three.min.js"></script>
-		<script src="js/OrbitControls.js"></script>
-		<script src="js/scratch2.js"></script>
+		<script src="js/tone.min.js"></script>
+		<script>
+		var player = new Tone.Player({
+				"url" : "samples/creepy_109.wav",
+				"autostart" : true,
+		}).toMaster();
+		</script>
 
 	</body>
 </html>

@@ -7,6 +7,8 @@
 
   var notes = ["C4", "D4", "E4", "F4", "G4", "A4", "B4"];
 
+  var player;
+
   init();
   animate();
 
@@ -69,6 +71,8 @@
 
     window.addEventListener( 'resize', onWindowResize, false );
 
+    initPlayer();
+
   }
 
   function onWindowResize() {
@@ -89,25 +93,16 @@
 
   }
 
+  function initPlayer() {
+    player = new Tone.Player({
+			"url" : "../samples/creepy_109.wav",
+			"autostart" : true,
+		}).toMaster();
+  }
+
   function play() {
-      var synth = new Tone.Synth({
-        "oscillator" : {
-          "type" : "amtriangle",
-          "harmonicity" : 0.5,
-          "modulationType" : "sine"
-        },
-        "envelope" : {
-          "attackCurve" : 'exponential',
-          "attack" : 0.05,
-          "decay" : 0.2,
-          "sustain" : 0.2,
-          "release" : 1.5,
-        },
-        "portamento" : 0.05
-      }).toMaster();
-      var num = Math.floor(Math.random() * 7)
-      synth.triggerAttackRelease(notes[num], 1 );
-}
+    player.start();
+  }
 
   function animate() {
 
