@@ -153,7 +153,6 @@
 
 			function play(color) {
 				console.log(dict[color]);
-				var dist = new Tone.Distortion(0.8).toMaster();
 				var url = "samples/"+dict[color];
 				player = new Tone.Player({
 					"url" : url,
