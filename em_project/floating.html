@@ -19,7 +19,7 @@
 
 		<script src="js/stats.min.js"></script>
 
-		<script src="js/tone.min.js"></script>
+		<script src="js/Tone.js"></script>
 
 		<script>
 
@@ -30,8 +30,11 @@
 			var radius = 100, theta = 0;
 
 			var notes = ["C4", "D4", "E4", "F4", "G4", "A4", "B4"];
-			var colors = [0xffe0e7,0xd3f4ff, 0xfef5dc, 0xd2ffe1, 0xe1e0ff];
-			var dict = {0xffe0e7:"creepy_109.wav", 0xd3f4ff:"layer_universe_C2.wav", 0xfef5dc:"sunrise_over_iceland_C0.wav", 0xd2ffe1:"the_dream_C1.wav", 0xe1e0ff:"wave_traveller_G2.wav"};
+			var colors = [0xffe0e7,0xd3f4ff, 0xfef5dc, 0xd2ffe1, 0xe1e0ff, 0xfff8cb, 0xdeffe0, 0xdefbff, 0xffeafc, 0xeee1ff];
+			var dict = {0xffe0e7:"creepy_109.wav", 0xd3f4ff:"layer_universe_C2.wav", 0xfef5dc:"sunrise_over_iceland_C0.wav",
+									0xd2ffe1:"the_dream_C1.wav", 0xe1e0ff:"wave_traveller_G2.wav", 0xfff8cb:"red_space_C5.wav",
+								  0xdeffe0:"frozen_ocean_C2.wav", 0xdefbff:"the_dream_Fs0.wav", 0xffeafc:"kingdom_of_the_sun_C3.wav",
+								  0xeee1ff:"80s_classic_synth_C0.wav"};
 
 			var player;
 
@@ -65,7 +68,8 @@
 
 				for ( var i = 0; i < 1000; i ++ ) {
 
-					var num = Math.round(Math.random() * (colors.length));
+					var num = Math.round(Math.random() * (colors.length-1));
+					console.log(num);
 					var object = new THREE.Mesh( geometry, new THREE.MeshLambertMaterial( { color:colors[num] } ) );
 
 					object.position.x = Math.random() * 800 - 400;
@@ -98,7 +102,7 @@
 
 				window.addEventListener( 'resize', onWindowResize, false );
 
-				initPlayer();
+				document.addEventListener( 'keydown', onDocumentKeyDown, false);
 
 			}
 
@@ -120,18 +124,42 @@
 
 			}
 
-			function initPlayer() {
-				player = new Tone.Player({
-					"url" : "samples/creepy_109.wav",
-				}).toMaster();
+			function onDocumentKeyDown( event ) {
+					var keyCode = event.which;
+					var effect;
+					switch ( keyCode ) {
+						case 68: //d - distortion
+							effect = new Tone.Distortion(0.8).toMaster();
+							console.log("distortion");
+							break;
+						case 80: //p - pingpong delay
+							console.log("pingpong");
+							effect = new Tone.PingPongDelay("8n", 0.2).toMaster();
+							break;
+						case 82:
+							console.log("reverb");
+							effect = new Tone.Reverb({
+								decay : 1.5,
+								preDelay : 0.02
+							}).toMaster();
+							break;
+						case 70:
+							console.log("freeverb");
+							effect = new Tone.Freeverb(0.7, 3000);
+							break;
+					}
+					player.connect(effect);
 			}
 
 			function play(color) {
+				console.log(dict[color]);
+				var dist = new Tone.Distortion(0.8).toMaster();
 				var url = "samples/"+dict[color];
 				player = new Tone.Player({
 					"url" : url,
 					"autostart" : true,
 				}).toMaster();
+
 			}
 
 			function animate() {
@@ -204,6 +232,14 @@
 				var geometry = new THREE.ShapeGeometry( heartShape );
 
 				return geometry;
+			}
+
+			function testPlay(){
+				//create a synth and connect it to the master output (your speakers)
+				player = new Tone.Synth().toMaster()
+
+				//play a middle 'C' for the duration of an 8th note
+				player.triggerAttackRelease('C4', '2n')
 			}
 
 
