@@ -16,10 +16,9 @@
 	<body>
 
 		<script src="js/three.js"></script>
-
 		<script src="js/stats.min.js"></script>
-
 		<script src="js/Tone.js"></script>
+		<script src="js/THREE.Tone.js"></script>
 
 		<script>
 
@@ -36,8 +35,7 @@
 								  0xdeffe0:"frozen_ocean_C2.wav", 0xdefbff:"the_dream_Fs0.wav", 0xffeafc:"kingdom_of_the_sun_C3.wav",
 								  0xeee1ff:"80s_classic_synth_C0.wav"};
 
-			var player;
-			var effect = new Tone.Volume(0); // placeholder for connection
+			var player, panner; // var for tone.js
 
 			init();
 			animate();
@@ -59,6 +57,7 @@
 
 				scene = new THREE.Scene();
 				scene.background = new THREE.Color( 0xffffff );
+				//scene.fog = new THREE.Fog( 0xffffff, 1, 10000 );
 
 				var light = new THREE.DirectionalLight( 0xffffff, 1 );
 				light.position.set( 1, 1, 1 ).normalize();
@@ -103,6 +102,7 @@
 
 				document.addEventListener( 'keydown', onDocumentKeyDown, false);
 
+				setupAudio();
 			}
 
 			function onWindowResize() {
@@ -124,44 +124,40 @@
 			}
 
 			function onDocumentKeyDown( event ) {
-
 					var keyCode = event.which;
-
+					var effect;
 					switch ( keyCode ) {
 						case 68: //d - distortion
-							effect = new Tone.Distortion(0.8);
+							effect = new Tone.Distortion(0.8).toMaster();
 							console.log("distortion");
 							break;
 						case 80: //p - pingpong delay
 							console.log("pingpong");
-							effect = new Tone.PingPongDelay(2, 0.25);
+							effect = new Tone.PingPongDelay("8n", 0.2).toMaster();
 							break;
-						case 70: // f - freeverb
+						case 82:
+							console.log("reverb");
+							effect = new Tone.Reverb({
+								decay : 1.5,
+								preDelay : 0.02
+							}).toMaster();
+							break;
+						case 70:
 							console.log("freeverb");
 							effect = new Tone.Freeverb(0.7, 3000);
 							break;
-						case 67:
-							console.log("clear");
-							effect = new Tone.Volume(0);
-							break;
 					}
-
-
+					player.connect(effect);
 			}
 
-			function play(color, position) {
+			function play(color) {
 
-				var distance = camera.position.distanceTo(position);
-				var volValue = distance / 10 * (-1) + 20;
-				var volume = new Tone.Volume(volValue);
-
+				var url = "samples/"+dict[color];
 				player = new Tone.Player({
-					"url": "samples/"+dict[color],
-					"autostart": true,
-				});
+					"url" : url,
+					"autostart" : true,
+				}).connect(panner).toMaster();
 
-				player.chain(effect, volume, Tone.Master);
-				//effect = new Tone.Volume(0);
 			}
 
 			function animate() {
@@ -202,8 +198,12 @@
 						var hexValue = INTERSECTED.material.color.getHex();
 						INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
 						INTERSECTED.material.emissive.setHex( 0xff0000 );
-						play(hexValue, INTERSECTED.position);
-						//testPlay();
+
+						panner.updatePosition(INTERSECTED);
+						//console.log(INTERSECTED.position.x, INTERSECTED.position.y, INTERSECTED.position.z);
+						Tone.Listener.updatePosition(camera);
+						//console.log(camera.position.x, camera.position.y, camera.position.z);
+						play(hexValue);
 					}
 
 				} else {
@@ -236,13 +236,23 @@
 				return geometry;
 			}
 
-			function testPlay(){
+			function testPlay() {
 				//create a synth and connect it to the master output (your speakers)
-				player = new Tone.Synth();
-				player.chain(effect, Tone.Master);
+				player = new Tone.Synth().toMaster()
+
 				//play a middle 'C' for the duration of an 8th note
 				player.triggerAttackRelease('C4', '2n')
+			}
 
+			function setupAudio() {
+
+				panner = new Tone.Panner3D().toMaster();
+				// set up the position of listener initially
+				Tone.Listener.updatePosition(camera);
+
+			}
+
+			function setupVisual() {
 
 			}
 
