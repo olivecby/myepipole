@@ -1,92 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<title>Floating</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-	<style>
-		body {
-			font-family: Monospace;
-			background-color: #f0f0f0;
-			margin: 0px;
-			overflow: hidden;
+	<head>
+		<title>Floating</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				margin: 0px;
+				overflow: hidden;
+			}
+		</style>
+			<style>
+		ul {
+		  list-style-type: none;
+		  margin: 10;
+		  padding: 10;
+
 		}
 
-		.container-name div {
-			display: flex;
-			width: 200px;
-			background-color: #eee;
-			height: auto;
+		li {
+		  float: left;
+			padding: 10;
 		}
 
-		#mySidenav a {
-		position: absolute;
-		left: -250px;
-		transition: 0.3s;
-		padding: 15px;
-		width: 10px;
-		text-decoration: none;
-		font-size: 20px;
-		color: black;
-		border-radius: 0 5px 5px 0;
+		li a {
+		  display: block;
+		  padding: 8px;
+		  background-color: #dddddd;
 		}
-
-		#mySidenav a:hover {
-		left: 0;
-		}
-
-		#about {
-		top: 20px;
-		background-color: white;
-		opacity: 0.8;
-		}
-
-		li{
-		display: inline-block;
-		padding: 10px;
-		}
-
-	</style>
+		</style>
 	</head>
 	<body>
-		<div id="mySidenav" class="sidenav">
-			<a href="#" id="about">
-				<ul>
-					<li>
-						<div class="container-name">
-							<div class="div1">D: Distortion</div>
-							<div id="distortion"> - Off</div>
-						</div>
-					</li>
-					<li>
-						<div class="container-name">
-							<div class="div1">P: PingPong</div>
-							<div id="pingpong"> - Off</div>
-						</div>
-					</li>
-					<li>
-						<div class="container-name">
-							<div class="div1">F: Freeverb</div>
-							<div id="freeverb"> - Off</div>
-						</div>
-					</li>
-					<li>
-						<div class="container-name">
-							<div class="div1">H: Chebyshev</div>
-							<div id="cheby"> - Off</div>
-						</div>
-					</li>
-					<li>
-						<div class="container-name">
-							<div class="div1">K: Chorus</div>
-							<div id="chorus"> - Off</div>
-						</div>
-					</li>
-				  </ul>
-			</a>
-	 </div>
 
+		<div id="menu" style="padding-left: 100px;">
+  <ul>
+    <li>Distortion<a>■</a></li>
+		<li>PingPongDelay<a>■</a></li>
+		<li>Freeverb<a>■</a></li>
+		<li>Distortion<a>■</a></li>
 
+  </ul>
+</div>
 		<script src="js/three.js"></script>
 
 		<script src="js/stats.min.js"></script>
@@ -110,7 +66,6 @@
 
 			var player;
 			var effect = new Tone.Volume(0); // placeholder for connection
-			var status = {};
 
 			init();
 			animate();
@@ -176,8 +131,6 @@
 
 				document.addEventListener( 'keydown', onDocumentKeyDown, false);
 
-				status = {"distortion":false, "pingpong":false, "freeverb":false, "cheby":false, "chorus":false};
-
 			}
 
 			function onWindowResize() {
@@ -201,98 +154,27 @@
 			function onDocumentKeyDown( event ) {
 
 					var keyCode = event.which;
-					//clearStatus();
+
 					switch ( keyCode ) {
 						case 68: //d - distortion
-							console.log("distortion");
 							effect = new Tone.Distortion(0.8);
-							status["distortion"] = true;
-							console.log(status["distortion"]);
-						  if(document.getElementById("distortion").innerHTML === "- On"){
-								document.getElementById("distortion").innerHTML = "- Off"
-							}
-							else {
-								document.getElementById("distortion").innerHTML = "- Off"
-								document.getElementById("pingpong").innerHTML = "- Off"
-								document.getElementById("freeverb").innerHTML = "- Off"
-								document.getElementById("cheby").innerHTML = "- Off"
-								document.getElementById("chorus").innerHTML = "- Off"
-								document.getElementById("distortion").innerHTML = "- On"
-							}
+							console.log("distortion");
 							break;
 						case 80: //p - pingpong delay
 							console.log("pingpong");
 							effect = new Tone.PingPongDelay(2, 0.25);
-							status["pingpong"] = true;
-							if(document.getElementById("pingpong").innerHTML === "- On"){
-								document.getElementById("pingpong").innerHTML = "- Off"
-							}
-							else {
-								document.getElementById("distortion").innerHTML = "- Off"
-								document.getElementById("pingpong").innerHTML = "- Off"
-								document.getElementById("freeverb").innerHTML = "- Off"
-								document.getElementById("cheby").innerHTML = "- Off"
-								document.getElementById("chorus").innerHTML = "- Off"
-								document.getElementById("pingpong").innerHTML = "- On"
-							}
 							break;
 						case 70: // f - freeverb
 							console.log("freeverb");
 							effect = new Tone.Freeverb(0.7, 3000);
-							status["freeverb"] = true;
-							if(document.getElementById("freeverb").innerHTML === "- On"){
-								document.getElementById("freeverb").innerHTML = "- Off"
-							}
-							else {
-								document.getElementById("distortion").innerHTML = "- Off"
-								document.getElementById("pingpong").innerHTML = "- Off"
-								document.getElementById("freeverb").innerHTML = "- Off"
-								document.getElementById("cheby").innerHTML = "- Off"
-								document.getElementById("chorus").innerHTML = "- Off"
-								document.getElementById("freeverb").innerHTML = "- On"
-							}
 							break;
-						case 72: // h - cheby
-							console.log("cheby");
-							effect = new Tone.Chebyshev(10);
-							status["cheby"] = true;
-							if(document.getElementById("cheby").innerHTML === "- On"){
-								document.getElementById("cheby").innerHTML = "- Off"
-							}
-							else {
-								document.getElementById("distortion").innerHTML = "- Off"
-								document.getElementById("pingpong").innerHTML = "- Off"
-								document.getElementById("freeverb").innerHTML = "- Off"
-								document.getElementById("chorus").innerHTML = "- Off"
-								document.getElementById("cheby").innerHTML = "- On"
-							}
-							break;
-						case 75: // k - chorus
-							console.log("chorus");
-							effect = new Tone.Chorus(4, 2.5, 0.5);
-							status["chorus"] = true;
-							if(document.getElementById("chorus").innerHTML === "- On"){
-								document.getElementById("chorus").innerHTML = "- Off"
-							}
-							else {
-								document.getElementById("distortion").innerHTML = "- Off"
-								document.getElementById("pingpong").innerHTML = "- Off"
-								document.getElementById("freeverb").innerHTML = "- Off"
-								document.getElementById("cheby").innerHTML = "- Off"
-								document.getElementById("chorus").innerHTML = "- On"
-							}
-							break;
-						case 67: // c - clear
+						case 67:
 							console.log("clear");
 							effect = new Tone.Volume(0);
-							document.getElementById("distortion").innerHTML = "- Off"
-							document.getElementById("pingpong").innerHTML = "- Off"
-							document.getElementById("freeverb").innerHTML = "- Off"
-							document.getElementById("cheby").innerHTML = "- Off"
-							document.getElementById("chorus").innerHTML = "- Off"
 							break;
 					}
-					updateMenu();
+
+
 			}
 
 			function play(color, position) {
@@ -304,12 +186,8 @@
 				player = new Tone.Player({
 					"url": "samples/"+dict[color],
 					"autostart": true,
-				}).toMaster();
+				});
 
-				// var distortionSend = player.send("distortion", 0);
-				// var distortion = Tone.Distortion(0.8)
-				// 										 .receive("distortion")
-				// 										 .toMaster();
 				player.chain(effect, volume, Tone.Master);
 				//effect = new Tone.Volume(0);
 			}
@@ -394,23 +272,6 @@
 				player.triggerAttackRelease('C4', '2n')
 
 
-			}
-
-			function clearStatus(){
-				for(var key in status){
-					status[key] = false;
-				}
-			}
-
-			function updateMenu(){
-				for(var key in status){
-					if(status[key] == true){
-						document.getElementById(key).innerHTML = "- On";
-					}
-					else{
-						document.getElementById(key).innerHTML = "- Off";
-					}
-				}
 			}
 
 
