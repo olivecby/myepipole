@@ -1,7 +1,13 @@
-p {
-  font-family: courier;
-}
-
 a {
   font-family: courier;
+  padding: 20px 20px 20px 20px;
+}
+
+a:visited, a:hover, a:active {
+  test-decoration: none;
+}
+
+h1 {
+  font-family: courier;
+  padding: 20px 20px 20px 20px;
 }
